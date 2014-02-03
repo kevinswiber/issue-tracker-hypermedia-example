@@ -1,5 +1,6 @@
 {
   "name": "issue-tracker-hypermedia-example",
+  "private": true,
   "version": "0.0.0",
   "description": "",
   "main": "server.js",
