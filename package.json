@@ -1,0 +1,30 @@
+{
+  "name": "issue-tracker-hypermedia-example",
+  "version": "0.0.0",
+  "description": "",
+  "main": "server.js",
+  "dependencies": {
+    "api-media-type": "~0.1.0",
+    "argo": "~0.4.9",
+    "argo-formatter-siren": "~0.0.0",
+    "http-status-codes": "~1.0.2",
+    "calypso-mongodb": "~0.0.0",
+    "calypso": "~0.0.0",
+    "titan": "~0.1.1",
+    "siren-writer": "~0.0.1"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/kevinswiber/issue-tracker-hypermedia-example.git"
+  },
+  "author": "Kevin Swiber <kswiber@gmail.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/kevinswiber/issue-tracker-hypermedia-example/issues"
+  }
+}
