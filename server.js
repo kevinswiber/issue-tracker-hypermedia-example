@@ -36,6 +36,7 @@ engine.build(function(err, connection) {
     })
     .load()
     .format({
+      directory: __dirname + '/representations',
       engines: [siren],
       override: {
         'application/json': siren
