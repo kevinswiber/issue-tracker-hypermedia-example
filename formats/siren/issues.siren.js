@@ -8,7 +8,6 @@ module.exports = function(model) {
     response.entity(siren.entity(issue.url)
       .cls('issue')
       .rel('item')
-      .rel('http://rels.x.io/issue')
       .properties({
         id: issue.id,
         title: issue.title,
