@@ -33,15 +33,8 @@ IssuesResource.prototype.list = function(env, next) {
 
   env.db.find(query, function(err, results) {
     results.forEach(function(issue) {
-      var item = Issue.create({
-        id: issue.id,
-        title: issue.title,
-        description: issue.description,
-        status: issue.status,
-        url: env.helpers.url.join(issue.id.toString())
-      });
-
-      issues.items.push(item)
+      issue.url = env.helpers.url.join(issue.id.toString());
+      issues.items.push(issue)
     });
 
     env.format.render('issues', issues);
