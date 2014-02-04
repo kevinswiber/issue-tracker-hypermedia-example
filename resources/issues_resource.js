@@ -67,6 +67,7 @@ IssuesResource.prototype.show = function(env, next) {
 };
 
 IssuesResource.prototype.action = function(env, next) {
+  var self = this;
   env.request.getBody(function(err, body) {
     if (err || !body) {
       env.response.statusCode = HttpStatus.BAD_REQUEST;
@@ -79,7 +80,6 @@ IssuesResource.prototype.action = function(env, next) {
 
     var query = Query.of(Issue);
 
-    var self = this;
     env.db.get(query, id, function(err, issue) {
       if (!issue || (parsed.action !== 'open' && parsed.action !== 'close')) {
         env.response.statusCode = HttpStatus.NOT_FOUND;
