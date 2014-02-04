@@ -86,9 +86,9 @@ IssuesResource.prototype.action = function(env, next) {
         return next(env);
       }
 
-      if (issue.action === 'open' && issue.status === 'closed') {
+      if (parsed.action === 'open' && issue.status === 'closed') {
         issue.status = 'open';
-      } else if (issue.action === 'close' && issue.status === 'open') {
+      } else if (parsed.action === 'close' && issue.status === 'open') {
         issue.status = 'closed';
       }
 
