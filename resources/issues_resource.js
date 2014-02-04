@@ -14,6 +14,7 @@ var IssuesResource = module.exports = function() {
 IssuesResource.prototype.init = function(config) {
   config
     .path(this.path)
+    .consumes(MediaType.FORM_URLENCODED)
     .produces(MediaType.SIREN)
     .get('/', this.list)
     .get('/{id}', this.show)
@@ -57,25 +58,7 @@ IssuesResource.prototype.show = function(env, next) {
       return next(env);
     }
 
-    issue.url = env.helpers.url.current();
-    issue.collection = env.helpers.url.path(self.path);
-    issue.actions = [];
-
-    if (issue.status === 'open') {
-      issue.actions.push({
-        name: 'close-issue',
-        method: 'POST',
-        href: env.helpers.url.current(),
-        fields: [ { name: 'action', type: 'hidden', value: 'close' } ]
-      });
-    } else if (issue.status === 'closed') {
-      issue.actions.push({
-        name: 'open-issue',
-        method: 'POST',
-        href: env.helpers.url.current(),
-        fields: [ { name: 'action', type: 'hidden', value: 'open' } ]
-      });
-    }
+    issue = formatIssue(env, issue, self.path);
 
     env.response.statusCode = HttpStatus.OK;
     env.format.render('issue', issue);
@@ -92,12 +75,13 @@ IssuesResource.prototype.action = function(env, next) {
 
     var id = env.route.params.id;
 
-    var parsed = querystring.parse(body);
+    var parsed = querystring.parse(body.toString());
 
     var query = Query.of(Issue);
 
+    var self = this;
     env.db.get(query, id, function(err, issue) {
-      if (!issue || (issue.action !== 'open' && issue.action !== 'close')) {
+      if (!issue || (parsed.action !== 'open' && parsed.action !== 'close')) {
         env.response.statusCode = HttpStatus.NOT_FOUND;
         return next(env);
       }
@@ -108,9 +92,35 @@ IssuesResource.prototype.action = function(env, next) {
         issue.status = 'closed';
       }
 
-      env.db.save(query, id, issue, function(err) {
+      //env.db.save(query, id, issue, function(err) {
+        issue = formatIssue(env, issue, self.path);
+        env.format.render('issue', issue);
         next(env);
-      });
+      //});
     });
   });
 };
+
+function formatIssue(env, issue, path) {
+  issue.url = env.helpers.url.current();
+  issue.collection = env.helpers.url.path(path);
+  issue.actions = [];
+
+  if (issue.status === 'open') {
+    issue.actions.push({
+      name: 'close-issue',
+      method: 'POST',
+      href: env.helpers.url.current(),
+      fields: [ { name: 'action', type: 'hidden', value: 'close' } ]
+    });
+  } else if (issue.status === 'closed') {
+    issue.actions.push({
+      name: 'open-issue',
+      method: 'POST',
+      href: env.helpers.url.current(),
+      fields: [ { name: 'action', type: 'hidden', value: 'open' } ]
+    });
+  }
+
+  return issue;
+}
