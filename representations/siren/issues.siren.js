@@ -16,7 +16,7 @@ module.exports = function(model) {
       }));
   });
 
-  response.action(siren.action('search-issues', model.search)
+  response.action(siren.action('search-issues', model.url)
       .title('Search Issues')
       .field('search', 'text'));
 
