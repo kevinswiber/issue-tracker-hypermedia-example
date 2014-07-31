@@ -21,19 +21,26 @@ IssuesResource.prototype.init = function(config) {
     .post('/{id}', this.action);
 };
 
+function formatSearch(search) {
+  var formatted = search.replace(/\"([^\"]*)\"/, '$1', 'g');
+  return formatted;
+};
+
 IssuesResource.prototype.list = function(env, next) {
   var issues = Issues.create({
     items: [],
-    url: env.helpers.url.current()
+    url: env.helpers.url.path(this.path)
   });
 
   var query = Query.of(Issue);
 
+
   if (env.route.query.search) {
     query
       .ql('where title contains @search or description contains @search')
-      .params({ search: env.route.query.search });
+      .params({ search: formatSearch(env.route.query.search) });
   }
+
 
   env.db.find(query, function(err, results) {
     results.forEach(function(issue) {
